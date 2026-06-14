@@ -6,6 +6,7 @@ import { ChevronLeft, ChevronRight, Sun, Moon, LayoutDashboard, Settings } from 
 import { Button } from "@/components/ui/button";
 import type { CalendarView } from "@/lib/types";
 import { PinModal } from "@/components/modals/PinModal";
+import { RoomSettingsModal } from "@/components/modals/RoomSettingsModal";
 import { useState } from "react";
 import Link from "next/link";
 
@@ -19,6 +20,7 @@ const VIEWS: { label: string; value: CalendarView }[] = [
 export function Header() {
   const { view, setView, currentDate, setCurrentDate, darkMode, toggleDarkMode, isAdmin, setIsAdmin } = useCalendar();
   const [pinOpen, setPinOpen] = useState(false);
+  const [roomSettingsOpen, setRoomSettingsOpen] = useState(false);
 
   const navigate = (dir: 1 | -1) => {
     if (view === "month") setCurrentDate(dir === 1 ? addMonths(currentDate, 1) : subMonths(currentDate, 1));
@@ -93,10 +95,11 @@ export function Header() {
         {isAdmin ? (
           <div className="flex items-center gap-1">
             <span className="text-xs bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200 px-2 py-0.5 rounded-full font-medium">Admin</span>
+            <Button variant="ghost" size="sm" onClick={() => setRoomSettingsOpen(true)} title="Room settings">
+              <Settings size={16} />
+            </Button>
             <Link href="/admin/subscriptions">
-              <Button variant="ghost" size="sm" title="Subscriptions">
-                <Settings size={16} />
-              </Button>
+              <Button variant="ghost" size="sm" title="Subscriptions" className="text-xs">Subs</Button>
             </Link>
             <Button variant="ghost" size="sm" onClick={() => setIsAdmin(false)} className="text-xs text-gray-500">
               Lock
@@ -110,6 +113,7 @@ export function Header() {
       </header>
 
       <PinModal open={pinOpen} onClose={() => setPinOpen(false)} onSuccess={() => { setIsAdmin(true); setPinOpen(false); }} />
+      <RoomSettingsModal open={roomSettingsOpen} onClose={() => setRoomSettingsOpen(false)} />
     </>
   );
 }
