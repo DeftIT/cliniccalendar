@@ -29,45 +29,44 @@ export function MobileHeader({ onMenuOpen }: Props) {
 
   return (
     <>
-      <header className="flex items-center gap-2 px-3 py-2 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 flex-shrink-0">
-        <button onClick={onMenuOpen} className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
+      {/* Fix #8: tighter layout so Admin button doesn't clip */}
+      <header className="flex items-center gap-1 px-2 py-2 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 flex-shrink-0">
+        <button onClick={onMenuOpen} className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 flex-shrink-0">
           <Menu size={20} />
         </button>
 
-        <span className="font-semibold text-gray-800 dark:text-white text-sm">Clinic</span>
-
-        <div className="flex items-center gap-0.5 ml-1">
-          <button onClick={() => navigate(-1)} className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
+        {/* Nav group — takes remaining space, centered */}
+        <div className="flex items-center flex-1 justify-center gap-0.5 min-w-0">
+          <button onClick={() => navigate(-1)} className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 flex-shrink-0">
             <ChevronLeft size={18} />
           </button>
           <button
             onClick={() => setCurrentDate(new Date())}
-            className="px-2 py-1 text-sm font-medium text-gray-700 dark:text-gray-200 min-w-[120px] text-center"
+            className="text-sm font-medium text-gray-700 dark:text-gray-200 px-1 truncate max-w-[140px] text-center"
           >
             {title()}
           </button>
-          <button onClick={() => navigate(1)} className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
+          <button onClick={() => navigate(1)} className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 flex-shrink-0">
             <ChevronRight size={18} />
           </button>
         </div>
 
-        <div className="flex-1" />
-
-        <button onClick={toggleDarkMode} className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
+        {/* Right actions */}
+        <button onClick={toggleDarkMode} className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 flex-shrink-0">
           {darkMode ? <Sun size={18} /> : <Moon size={18} />}
         </button>
 
         {isAdmin ? (
           <button
             onClick={() => setRoomSettingsOpen(true)}
-            className="text-xs bg-blue-600 text-white px-2.5 py-1 rounded-full font-medium"
+            className="text-[11px] bg-blue-600 text-white px-2.5 py-1 rounded-full font-semibold flex-shrink-0"
           >
-            Admin
+            ⚙ Admin
           </button>
         ) : (
           <button
             onClick={() => setPinOpen(true)}
-            className="text-xs border border-gray-300 dark:border-gray-600 px-2.5 py-1 rounded-full text-gray-600 dark:text-gray-300"
+            className="text-[11px] border border-gray-300 dark:border-gray-600 px-2.5 py-1 rounded-full text-gray-600 dark:text-gray-300 flex-shrink-0"
           >
             Admin
           </button>

@@ -6,6 +6,15 @@ import type { Booking } from "@/lib/types";
 import { useState } from "react";
 import { BookingModal } from "@/components/modals/BookingModal";
 
+// Shorten long names to fit in compact week cells
+function shortName(name: string): string {
+  if (name.length <= 8) return name;
+  // Try initials for multi-word names
+  const words = name.trim().split(/\s+/);
+  if (words.length >= 2) return words.map((w) => w[0]).join("").toUpperCase();
+  return name.slice(0, 6) + "…";
+}
+
 export function MobileWeekView() {
   const { bookings, rooms, visibleRoomIds, currentDate, setCurrentDate, setView, isAdmin, cleanerSlots } = useCalendar();
   const [selected, setSelected] = useState<Booking | null>(null);
@@ -56,7 +65,7 @@ export function MobileWeekView() {
               >
                 <span className="text-xs font-semibold text-gray-600 dark:text-gray-300">{room.name}</span>
               </div>
-              {/* Day cells */}
+              {/* Day cells — tap cell to go to day view */}
               <div className="grid grid-cols-7 border-t border-gray-50 dark:border-gray-800">
                 {days.map((day) => {
                   const dayBookings = bookingsForDay(day).filter((b) => b.roomId === room.id);
@@ -65,21 +74,18 @@ export function MobileWeekView() {
                       key={day.toISOString()}
                       onClick={() => { setCurrentDate(day); setView("day"); }}
                       className={[
-                        "min-h-[52px] px-0.5 py-1 flex flex-col gap-0.5 cursor-pointer",
+                        "min-h-[56px] px-0.5 py-1 flex flex-col gap-0.5 cursor-pointer active:bg-gray-100 dark:active:bg-gray-800",
                         isToday(day) ? "bg-blue-50/50 dark:bg-blue-950/20" : "",
                       ].join(" ")}
                     >
                       {dayBookings.map((b) => (
                         <div
                           key={b.id}
-                          className="rounded text-[9px] font-semibold px-1 py-0.5 truncate leading-tight"
-                          style={{ backgroundColor: room.color + "25", color: room.color, borderLeft: `2px solid ${room.color}` }}
+                          className="rounded text-[10px] font-semibold px-1 py-1 leading-tight"
+                          style={{ backgroundColor: room.color + "30", color: room.color, borderLeft: `2px solid ${room.color}` }}
                           onClick={(e) => { e.stopPropagation(); if (isAdmin) setSelected(b); }}
                         >
-                          {b.title}
-                          {b.bookingType === "custom" && b.startTime && (
-                            <span className="block opacity-70 font-normal">{b.startTime?.slice(0,5)}</span>
-                          )}
+                          {shortName(b.title)}
                         </div>
                       ))}
                     </div>
